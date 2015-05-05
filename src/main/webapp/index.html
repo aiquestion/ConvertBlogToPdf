@@ -1,0 +1,119 @@
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>Convert your blog to pdf</title>
+
+<!-- Bootstrap core CSS -->
+<link
+	href="http://cdn.bootcss.com/bootstrap/3.3.2/css/bootstrap.min.css"
+	rel="stylesheet">
+
+</head>
+
+<body>
+
+	<div class="container">
+		<div class="header">
+			<h3 class="text-muted">Blog to Pdf</h3>
+		</div>
+
+		<div class="jumbotron">
+			<h1>Blog to Pdf</h1>
+			<p class="lead">You can convert your blog in to a pdf.</p>
+			<div class="form-group">
+				<input id="blogpage" type="text" class="form-control"
+					placeholder="Blog List Url"><br> <input id="next"
+					type="text" class="form-control" placeholder="Next Page Pattern"><br>
+				<input id="pattern" type="text" class="form-control"
+					placeholder="Blog link Pattern"><br>
+					<input id="email" type="text" class="form-control"
+					placeholder="Your Email"><br>
+			</div>
+			<p>
+				<a class="btn btn-lg btn-success" href="#" role="button"
+					data-toggle="modal" data-target="#myModal" onclick="GetBlogList()">Go</a>
+			</p>
+		</div>
+
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-hidden="true">&times;</button>
+						<h4 class="modal-title" id="myModalLabel">Blog Url Review</h4>
+					</div>
+					<div class="modal-body">Here is the blogs will be put into a
+						Pdf:</div>
+					<div id="bloglist" class="modal-body">Loading...</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close
+						</button>
+						<button type="button" class="btn btn-primary"
+							onclick="CreatePDF()">Convert</button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+		</div>
+
+		<footer class="footer">
+			<p>&copy; Company 2014</p>
+		</footer>
+
+	</div>
+	<!-- /container -->
+
+	<script src="http://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
+	<script
+		src="http://cdn.bootcss.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+	<script>
+		var A = {};
+		function GetBlogList() {
+			$("#bloglist").html("Loading...");
+			var page = $("#blogpage").val();
+			var next = $("#next").val();
+
+			var pattern = $("#pattern").val();
+			$.getJSON("/BlogList?bloglist=" + page + "&next=" + next
+					+ "&pattern=" + pattern, function(data) {
+				if (data) {
+					var urls = data;
+					A.urls = urls;
+					$("#bloglist").html("");
+					for (var i = 0; i < urls.length; i++) {
+						$("#bloglist").append(urls[i] + "<br>");
+					}
+				}
+			});
+		}
+
+		function CreatePDF() {
+			var email = $("#email").val();
+			var data = {list: A.urls, email:email };
+			$.ajax({
+						type : 'POST',
+						url : "/PDF",
+						contentType : "application/json; charset=utf-8",
+						headers : {
+							Accept : "application/json; charset=utf-8",
+						},
+						data : JSON.stringify(data),
+						complete : function(req) {
+							if (req.status == 200) {
+								$("#bloglist")
+										.html(
+												"Request created. We need some time to generate the PDF, it will be send to your email once it is availiable.");
+							}
+						}
+					});
+		}
+	</script>
+</body>
+</html>
