@@ -1,9 +1,9 @@
-# Reader #
+# ConvertBlogToPdf #
 
 ## Build & Run ##
 
 ```sh
-$ cd Reader
+$ cd ConvertBlogToPdf
 $ ./sbt
 > container:start
 > browse
