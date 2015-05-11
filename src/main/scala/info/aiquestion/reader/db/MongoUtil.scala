@@ -21,13 +21,14 @@ object MongoUtil {
     }
   }
 
-  def createCache(url:String, file:String){
+  def createCache(url:String, file:String) : Boolean = {
     val cache = mongoClient("reader")("filecache")
     try{
       cache.insert(MongoDBObject("url"->url, "file"->file))
+      true;
     }
     catch{
-      case _:Throwable=> //ignore
+      case _:Throwable=> false
     }
   }
   

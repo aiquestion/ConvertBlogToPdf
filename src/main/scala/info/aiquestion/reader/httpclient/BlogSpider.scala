@@ -1,8 +1,5 @@
 package info.aiquestion.reader.httpclient
 import dispatch._
-import scala.util.Success
-import scala.util.Try
-import scala.util.Failure
 import scala.concurrent.ExecutionContext
 import ExecutionContext.Implicits.global
 import scala.collection.mutable.Map

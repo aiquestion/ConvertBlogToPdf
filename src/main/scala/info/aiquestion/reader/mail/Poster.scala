@@ -2,14 +2,16 @@ package info.aiquestion.reader.mail
 import courier._
 import javax.mail.internet.InternetAddress
 import java.io.File
+import org.slf4j.LoggerFactory
+
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Await
-import scala.concurrent.duration._
 import info.aiquestion.reader.Config
 
 object Poster {
 
+  val logger = LoggerFactory.getLogger(getClass)
   def send(file: String, email: String) {
+    logger.info("send file:" + file + " to" + email)
     val mailer = Mailer("smtp.gmail.com", 587)
       .auth(true)
       .as(Config.EMAIL, Config.PASSWORD)

@@ -1,27 +1,19 @@
 package info.aiquestion.reader
 
-import org.scalatra._
-import scalate.ScalateSupport
 import info.aiquestion.reader.httpclient.BlogSpider
-// JSON-related libraries
 import org.json4s.{DefaultFormats, Formats}
-
-// JSON handling support from Scalatra
 import org.scalatra.json._
+import org.slf4j.{Logger, LoggerFactory}
 
 class MyScalatraServlet extends ReaderStack with JacksonJsonSupport {
-protected implicit val jsonFormats: Formats = DefaultFormats
+  val logger = LoggerFactory.getLogger(getClass)
+  protected implicit val jsonFormats: Formats = DefaultFormats
 
   get("/") {
-    <html>
-      <body>
-        <h1>Hello, world!</h1>
-        Say <a href="hello-scalate">hello to Scalate</a>.
-      </body>
-    </html>
+    redirect("index.html")
   }
-  
-  get("/BlogList"){
+
+  get("/BlogList") {
     val blogList = params("bloglist")
     val next = params("next")
     val pattern = params("pattern")
@@ -29,13 +21,13 @@ protected implicit val jsonFormats: Formats = DefaultFormats
     spider.retrieveBlogList(blogList, next, pattern)
     spider.blogUrls.toList.sorted
   }
-  
-  
-  post("/PDF"){
+
+  post("/PDF") {
     val pdfInfo = parsedBody.extract[PDFInfo]
-    println(pdfInfo)
-    val res = (new Processor).process(pdfInfo.list, pdfInfo.email)
+    logger.info("Start converting,urls:{0}", pdfInfo.list.toString())
+    (new Processor).process(pdfInfo.list, pdfInfo.email)
     null
   }
 }
-case class PDFInfo(list:List[String], email:String)
+
+case class PDFInfo(list: List[String], email: String)

@@ -1,7 +1,6 @@
 import sbt._
 import Keys._
 import org.scalatra.sbt._
-import org.scalatra.sbt.PluginKeys._
 import com.mojolly.scalate.ScalatePlugin._
 import ScalateKeys._
 
@@ -33,25 +32,25 @@ object ReaderBuild extends Build {
         //for email
         "me.lessis" %% "courier" % "0.1.3",
         // for http client
-        "net.databinder.dispatch" %% "dispatch-core" % "0.11.1" withSources () withJavadoc (),
+        "net.databinder.dispatch" %% "dispatch-core" % "0.11.1" withSources() withJavadoc(),
         // for merge pdfs
         "org.apache.pdfbox" % "pdfbox" % "1.8.2",
         // json support
         "org.scalatra" %% "scalatra-json" % "2.3.0",
-        "org.json4s" %% "json4s-jackson" % "3.2.10" withSources () withJavadoc (),
+        "org.json4s" %% "json4s-jackson" % "3.2.10" withSources() withJavadoc(),
         // for actor
         "org.scala-lang" % "scala-actors" % ScalaVersion,
-      //for mongodb
-      "org.mongodb" %% "casbah" % "2.7.2",
-      "org.json4s" %% "json4s-mongo" % "3.2.10"
+        //for mongodb
+        "org.mongodb" %% "casbah" % "2.7.2",
+        "org.json4s" %% "json4s-mongo" % "3.2.10"
       ),
-        scalateTemplateConfig in Compile <<=(sourceDirectory in Compile) { base =>
-          Seq(
-            TemplateConfig(
-              base / "webapp" / "WEB-INF" / "templates",
-              Seq.empty, /* default imports should be added here */
-              Seq(
-                Binding("context", "_root_.org.scalatra.scalate.ScalatraRenderContext", importMembers = true, isImplicit = true)), /* add extra bindings here */
-              Some("templates")))
-        }))
+      scalateTemplateConfig in Compile <<= (sourceDirectory in Compile) { base =>
+        Seq(
+          TemplateConfig(
+            base / "webapp" / "WEB-INF" / "templates",
+            Seq.empty, /* default imports should be added here */
+            Seq(
+              Binding("context", "_root_.org.scalatra.scalate.ScalatraRenderContext", importMembers = true, isImplicit = true)), /* add extra bindings here */
+            Some("templates")))
+      }))
 }
