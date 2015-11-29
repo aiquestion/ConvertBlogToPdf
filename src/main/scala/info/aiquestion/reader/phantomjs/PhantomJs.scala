@@ -1,13 +1,17 @@
 package info.aiquestion.reader.phantomjs
-import info.aiquestion.reader.Config
-import scala.sys.process._
+import dispatch._
+import scala.concurrent.ExecutionContext
+import ExecutionContext.Implicits.global
 
 class PhantomJs {
-
-  
-  def generate(url:String, destination:String) : Int =
+  def generate(url:String, destination:String)(implicit ctx: ExecutionContext): Int =
   {
-    Seq(Config.PHANTOMJSBIN,"""--disk-cache=true""", Config.PHANTOMJSSCRIPT, url, destination, Config.KINDLESIZE).!
+    // send request to phantomJs server,listener on 9999.
+    val req = dispatch.url("http://localhost:9999")
+    def myRequestAsJson = req.setContentType("application/json", "UTF-8")
+    def myPostWithBody = myRequestAsJson << "{\"url\":\""+url+"\",\"output\":\""+destination+"\"}"
+    val value = dispatch.Http(myPostWithBody OK as.String)
+    value().toInt
   }
 }
 

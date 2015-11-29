@@ -1,119 +1,185 @@
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="">
-<meta name="author" content="">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-<title>Convert your blog to pdf</title>
+    <title>Convert your blog to pdf</title>
 
-<!-- Bootstrap core CSS -->
-<link
-	href="http://cdn.bootcss.com/bootstrap/3.3.2/css/bootstrap.min.css"
-	rel="stylesheet">
+    <!-- Bootstrap core CSS -->
+    <link
+            href="http://cdn.bootcss.com/bootstrap/3.3.2/css/bootstrap.min.css"
+            rel="stylesheet">
 
 </head>
 
 <body>
 
-	<div class="container">
-		<div class="header">
-			<h3 class="text-muted">Blog to Pdf</h3>
-		</div>
+<div class="container">
+    <div class="header">
+        <h3 class="text-muted">Blog to Pdf</h3>
+    </div>
 
-		<div class="jumbotron">
-			<h1>Blog to Pdf</h1>
-			<p class="lead">You can convert your blog in to a pdf.</p>
-			<div class="form-group">
-				<input id="blogpage" type="text" class="form-control"
-					placeholder="Blog List Url"><br> <input id="next"
-					type="text" class="form-control" placeholder="Next Page Pattern"><br>
-				<input id="pattern" type="text" class="form-control"
-					placeholder="Blog link Pattern"><br>
-					<input id="email" type="text" class="form-control"
-					placeholder="Your Email"><br>
-			</div>
-			<p>
-				<a class="btn btn-lg btn-success" href="#" role="button"
-					data-toggle="modal" data-target="#myModal" onclick="GetBlogList()">Go</a>
-			</p>
-		</div>
+    <div class="jumbotron">
+        <h1>Blog to Pdf</h1>
 
-		<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-			aria-labelledby="myModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal"
-							aria-hidden="true">&times;</button>
-						<h4 class="modal-title" id="myModalLabel">Blog Url Review</h4>
-					</div>
-					<div class="modal-body">Here is the blogs will be put into a
-						Pdf:</div>
-					<div id="bloglist" class="modal-body">Loading...</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close
-						</button>
-						<button type="button" class="btn btn-primary"
-							onclick="CreatePDF()">Convert</button>
-					</div>
-				</div>
-				<!-- /.modal-content -->
-			</div>
-		</div>
+        <p class="lead">You can convert your blog in to a pdf.</p>
+        <p class="lead">Or you can make a bookmark and run it on the page you want to convert to a pdf.</p>
 
-		<footer class="footer">
-			<p>&copy; Company 2014</p>
-		</footer>
+        <div class="form-group">
+            <input id="blogpage" type="text" class="form-control"
+                   placeholder="Blog List Url"><br> <input id="next"
+                                                           type="text" class="form-control"
+                                                           placeholder="Next Page Pattern"><br>
+            <input id="pattern" type="text" class="form-control"
+                   placeholder="Blog link Pattern"><br>
+            <input id="email" type="text" class="form-control"
+                   placeholder="Your Email"><br>
+        </div>
+        <p>
+            <a class="btn btn-lg btn-success" href="#" role="button"
+               data-toggle="modal" data-target="#myModal" onclick="sendToMail()">Go</a>
 
-	</div>
-	<!-- /container -->
+            <p> Input your email in the input box above and then drag this button to your Chrome bookmark.</p>
+            <a class="btn btn-lg btn-success" href="" role="button" id="bookmark"
+               data-toggle="modal" data-target="#myModal" onmousedown="dragToBookMark()">Your bookmark</a>
+            <script>
+                function dragToBookMark() {
+                    var mail = $("#email").val();
+                    var code = 'javascript:function sendToMail() { var email = "' + mail + '"; \
+var url = window.location.toString();\
+ var data = { list: [url], email: email };\
+ var option = { method: "POST", url: "http://www.aiquestion.info:8080/PDF", data: JSON.stringify(data) , success: function(){\
+	 var note = document.createElement("div");\
+	 note.style.position = "absolute";\
+	  note.style.zIndex = "9999";\
+	   note.style.width = "300";\
+	    note.style.height = "200";\
+		 note.style.top = "-50%";\
+		  note.style.left = "-50%";\
+		   note.style.display = "none";\
+		    note.style.marginLeft = "-150";\
+			note.style.marginTop = "-100";\
+	note.innerHTML = "Done";\
+	 document.body.appendChild(note);\
+   document.write("Done");\
+ }, error: function(){}};\
+  var ajax = {\
+ init : function(){\
+  var xmlHttp = new XMLHttpRequest();\
+  if (!window.XMLHttpRequest)\
+     xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");\
+    return xmlHttp;\
+ },\
+ call : function(opt){\
+  var xmlHttp = this.init();\
+  xmlHttp.onreadystatechange = function(){\
+   if(xmlHttp.readyState===4)\
+   {\
+     xmlHttp.status===200 ?\
+     opt.success(xmlHttp.responseText,xmlHttp.responseXML) : opt.error(xmlHttp.responseText,xmlHttp.status);\
+   }\
+  };\
+  if(opt.method.toLowerCase() === "get"){\
+   opt.url = opt.url + "?" + opt.data;\
+   opt.data = null;\
+  }\
+  xmlHttp.open(opt.method,opt.url,opt.async);\
+  if(opt.method.toLowerCase() === "post")\
+   xmlHttp.setRequestHeader("Content-Type","application/json; charset=utf-8");\
+   xmlHttp.setRequestHeader("Accept","application/json; charset=utf-8");\
+   xmlHttp.send(opt.data);\
+ }\
+  };\
+ajax.init();\
+ajax.call(option);\
+}\
+sendToMail();';
 
-	<script src="http://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
-	<script
-		src="http://cdn.bootcss.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-	<script>
-		var A = {};
-		function GetBlogList() {
-			$("#bloglist").html("Loading...");
-			var page = $("#blogpage").val();
-			var next = $("#next").val();
+                    $('#bookmark').attr("href", code);
+                }
+            </script>
+        </p>
+    </div>
 
-			var pattern = $("#pattern").val();
-			$.getJSON("/BlogList?bloglist=" + page + "&next=" + next
-					+ "&pattern=" + pattern, function(data) {
-				if (data) {
-					var urls = data;
-					A.urls = urls;
-					$("#bloglist").html("");
-					for (var i = 0; i < urls.length; i++) {
-						$("#bloglist").append(urls[i] + "<br>");
-					}
-				}
-			});
-		}
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Blog Url Review</h4>
+                </div>
+                <div class="modal-body">Here is the blogs will be put into a
+                    Pdf:
+                </div>
+                <div id="bloglist" class="modal-body">Loading...</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close
+                    </button>
+                    <button type="button" class="btn btn-primary"
+                            onclick="CreatePDF()">Convert
+                    </button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+    </div>
 
-		function CreatePDF() {
-			var email = $("#email").val();
-			var data = {list: A.urls, email:email };
-			$.ajax({
-						type : 'POST',
-						url : "/PDF",
-						contentType : "application/json; charset=utf-8",
-						headers : {
-							Accept : "application/json; charset=utf-8",
-						},
-						data : JSON.stringify(data),
-						complete : function(req) {
-							if (req.status == 200) {
-								$("#bloglist")
-										.html(
-												"Request created. We need some time to generate the PDF, it will be send to your email once it is availiable.");
-							}
-						}
-					});
-		}
-	</script>
+    <footer class="footer">
+        <p>&copy; Company 2014</p>
+    </footer>
+
+</div>
+<!-- /container -->
+
+<script src="http://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
+<script
+        src="http://cdn.bootcss.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<script>
+    var A = {};
+    function GetBlogList() {
+        $("#bloglist").html("Loading...");
+        var page = $("#blogpage").val();
+        var next = $("#next").val();
+
+        var pattern = $("#pattern").val();
+        $.getJSON("/BlogList?bloglist=" + page + "&next=" + next
+                + "&pattern=" + pattern, function (data) {
+            if (data) {
+                var urls = data;
+                A.urls = urls;
+                $("#bloglist").html("");
+                for (var i = 0; i < urls.length; i++) {
+                    $("#bloglist").append(urls[i] + "<br>");
+                }
+            }
+        });
+    }
+
+    function CreatePDF() {
+        var email = $("#email").val();
+        var data = {list: A.urls, email: email};
+        $.ajax({
+            type: 'POST',
+            url: "/PDF",
+            contentType: "application/json; charset=utf-8",
+            headers: {
+                Accept: "application/json; charset=utf-8",
+            },
+            data: JSON.stringify(data),
+            complete: function (req) {
+                if (req.status == 200) {
+                    $("#bloglist")
+                            .html(
+                            "Request created. We need some time to generate the PDF, it will be send to your email once it is availiable.");
+                }
+            }
+        });
+    }
+</script>
 </body>
 </html>
